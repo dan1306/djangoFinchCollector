@@ -1,22 +1,25 @@
 from django.shortcuts import render
+from django.views.generic.edit import CreateView
 from .models import Finch
 
 # Create your views here.
 from django.http import HttpResponse
 
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-# class Finch:  # Note that parens are optional if not inheriting from another class
-#   def __init__(self, name, breed, description, age):
-#     self.name = name
-#     self.breed = breed
-#     self.description = description
-#     self.age = age
+class FinchCreate(CreateView):
+  model = Finch
+  fields = ['name', 'breed', 'description', 'age']
+  success_url = '/finch/'
 
-# Finch = [
-#   Finch('Lolo', 'tabby', 'foul little demon', 3),
-#   Finch('Sachi', 'tortoise shell', 'diluted tortoise shell', 0),
-#   Finch('Raven', 'black tripod', '3 legged cat', 4)
-# ]
+class FinchUpdate(UpdateView):
+  model = Finch
+  # Let's disallow the renaming of a cat by excluding the name field!
+  fields = ['breed', 'description', 'age']
+
+class FinchDelete(DeleteView):
+  model = Finch
+  success_url = '/finch/'
 
 # Define the home view
 def home(request):
@@ -30,5 +33,5 @@ def finch_index(request):
   return render(request, 'finch/index.html', { 'finch': finch })
 
 def finch_detail(request, finch_id):
-  finch = Cat.objects.get(id=finch_id)
+  finch = Finch.objects.get(id=finch_id)
   return render(request, 'finch/detail.html', { 'finch': finch })

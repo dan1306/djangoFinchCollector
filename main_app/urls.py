@@ -7,5 +7,6 @@ urlpatterns = [
     path('finch/', views.finch_index , name='finch'),
     # new route below 
  path('finch/<int:finch_id>/', views.finch_detail, name='finch_detail'),
+#  views and  models 2
 ]
 

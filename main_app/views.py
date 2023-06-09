@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
 from .models import Finch
+from .forms import FeedingForm
 
 # Create your views here.
 from django.http import HttpResponse
@@ -34,4 +35,18 @@ def finch_index(request):
 
 def finch_detail(request, finch_id):
   finch = Finch.objects.get(id=finch_id)
-  return render(request, 'finch/detail.html', { 'finch': finch })
+  feeding_form = FeedingForm()
+
+  return render(request, 'finch/detail.html', { 'finch': finch, 'feeding_form': feeding_form  })
+
+
+def add_feeding(request, finch_id):
+  print(request.POST)
+  form = FeedingForm(request.POST)
+  print(form)
+
+  if form.is_valid():
+    new_feeding = form.save(commit=False)
+    new_feeding.finch_id = finch_id
+    new_feeding.save()
+  return redirect('finch_detail', finch_id=finch_id)
